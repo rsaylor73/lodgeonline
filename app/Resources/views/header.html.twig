@@ -1,0 +1,150 @@
+{% block page_header %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Aggressor Fleet :: Online Reservations</title>
+    <meta name="author" content="Custom PHP Design : Robert Saylor : http://www.customphpdesign.com">
+    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/simple-sidebar.css')}}" rel="stylesheet">
+    <link href="{{asset('css/checkbox.css')}}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{{asset('css/simplePagination.css')}}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.datetimepicker.css')}}"/>
+    <style>
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+      background-color: #00d4ff;
+    }
+
+    .navbar-brand,
+    .navbar-nav li a {
+        line-height: 68px;
+        height: 68px;
+        padding-top: 0;
+    }
+
+    </style>
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
+
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+  <script type="text/javascript" src="{{asset('js/jquery.simplePagination.js')}}"></script>
+  <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<style>
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+</style>
+
+</head>
+<body>
+
+
+
+
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{path('index')}}"><img src="{{asset('assets/img/Logo-ResSystem.png')}}" height="64" /></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      {% if app.user %}
+      <ul class="nav navbar-nav">
+
+      {% if (app.user.role == "admin" or app.user.role == "agent" or app.user.role == "accounting" or app.user.role == "owner" or app.user.role == "crew") %}
+      <li class="active"><a href="{{path('index')}}">Main Menu <span class="sr-only">(current)</span></a></li>
+      {% endif %}
+
+      {% if (app.user.role == "admin" or app.user.role == "agent" or app.user.role == "accounting") %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{{path('listresellers')}}">Resellers</a></li>
+            <li><a href="{{path('listcontacts')}}">Contacts</a></li>
+          </ul>
+        </li>
+      {% endif %}
+
+      {% if (app.user.role == "admin" or app.user.role == "accounting") %}
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Financial Reports <span class="caret"></span></a>        
+        <ul class="dropdown-menu">
+          <!--<li><a href="#">Transfer Report</a></li>-->
+          <li><a href="{{path('balancereport')}}">Balance Report</a></li>
+          <li><a href="{{path('paymentsreport')}}">Payment Report</a></li>
+        </ul>
+      </li>
+      {% endif %}
+
+      {% if (app.user.role == "admin" or app.user.role == "agent" or app.user.role == "accounting" or app.user.role == "owner" or app.user.role == "crew") %}
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Guest Reports <span class="caret"></span></a>        
+        <ul class="dropdown-menu">
+          <li><a href="{{path('checkinreport')}}">Check-In Report</a></li>
+          <li><a href="{{path('viewcalendar')}}">Calendar</a></li>
+        </ul>
+      </li>
+      {% endif %}
+
+      {% if app.user.role == "admin" %}
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>        
+        <ul class="dropdown-menu">
+          <li><a href="{{path('users')}}">Users</a></li>
+        </ul>
+      </li>
+      {% endif %}
+      </ul>
+
+      {% if (app.user.role == "admin" or app.user.role == "agent" or app.user.role == "accounting" or app.user.role == "owner" or app.user.role == "crew") %}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{path('profile')}}">Profile</a></li>
+        <li><a href="{{logout_path('main')}}">Logout</a></li>
+      </ul>
+      {% endif %}
+      {% endif %}
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+        <!-- Page Content -->
+        <!--<div id="page-content-wrapper">
+            <div class="container-fluid xyz">-->
+{% endblock %}
